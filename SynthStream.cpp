@@ -1,4 +1,4 @@
-/////////////////////////
+///////////////////////////
 // (c) 2015 Mark Elsinger
 // SynthStream implementation
 // Splits bytes in half and distributes between 2 files.
@@ -7,7 +7,7 @@
 // In fact, don't even use with any encryption
 // method that preserves patterns like 
 // anything in a block coding method.
-/////////////////////////
+///////////////////////////
 
 #include "SynthStream.h"
 #include <fstream>

@@ -1,64 +1,51 @@
 #include <iostream>
-#include "SynthStream.h"
+#include "taiji.h"
 
 using namespace std;
+
 
 void main(int argc, char * argv[])
 {
 	if (argc == 5 && strcmp(argv[1], "-e") == 0)
 	{
-		fstream fs;
-		string data;
-
-		fs.open(argv[2], ios_base::in | ios_base::out | ios_base::binary);
-		if (!fs.is_open())
+		int error = taiji_encode_to_files(argv[2], argv[3], argv[4], 'i');
+		if (error == 0)
 		{
-			fs.open(argv[2], ios_base::in | ios_base::out | ios_base::binary | ios_base::trunc);
+			printf("File divided.\n");
 		}
-		while (fs.good())
+		else
 		{
-			data += fs.get();
+			printf("Error encountered.\n");
 		}
-		SynthStream synth(argv[3], argv[4], 'i');
-		//synth.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit.\0", 100);
-		synth.write(data.c_str(), data.length());
-		synth.flush();
-		synth.close();
-		printf("File Divided.");
 		std::cin.get();
 	}
 	else if (argc == 5 && strcmp(argv[1], "-d") == 0)
 	{
-		fstream fs;
-		SynthStream synth(argv[2], argv[3], 'i');
-		string data;
-
-		fs.open(argv[4], ios_base::in | ios_base::out | ios_base::binary);
-		if (!fs.is_open())
+		int error = taiji_decode_from_files(argv[2], argv[3], argv[4], 'i');
+		if (error == 0)
 		{
-			fs.open(argv[4], ios_base::in | ios_base::out | ios_base::binary | ios_base::trunc);
+			printf("File synthesized\n");
 		}
-		while (!synth.eof())
+		else
 		{
-			data += synth.get();
+			printf("Error encountered.\n");
 		}
-		synth.close();
-		printf("Number of characters found: %d\n", data.length());
-		//printf(data.c_str());	//prints to screen.
-		fs.write(data.c_str(), data.length());
 		std::cin.get();
 	}
 	else if (argc == 3)
 	{
-		SynthStream synth(argv[1], argv[2], 'i');
 		string data;
-		while (!synth.eof())
+		int error = taiji_decode(argv[1], argv[2], data, 'i');
+		if (error == 0)
 		{
-			data += synth.get();
+			printf("Number of characters found: %d\n", data.length());
+			printf(data.c_str());
 		}
-		synth.close();
-		printf("Number of characters found: %d\n", data.length());
-		printf(data.c_str());
+		else
+		{
+			printf("Error encountered.\n");
+		}
+		
 		std::cin.get();
 	}
 	else
